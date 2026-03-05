@@ -1,131 +1,18 @@
-import { checkoutAction } from '@/lib/payments/actions';
-import { Check } from 'lucide-react';
-import { getStripePrices, getStripeProducts } from '@/lib/payments/stripe';
-import { SubmitButton } from './submit-button';
+import React from "react";
 
-export default async function PricingPage() {
-  const [prices, products] = await Promise.all([
-    getStripePrices(),
-    getStripeProducts(),
-  ]);
+export const metadata = {
+  title: "Pricing & Plans – Tasklyst",
+  description: "Simple, transparent pricing to help your team grow. Choose the Tasklyst plan that fits your workflow.",
+};
 
-  // Find products by exact name
-  const basePlan = products.find((product) => product.name === 'Base');
-  const plusPlan = products.find((product) => product.name === 'Plus');
-
-  if (!basePlan || !plusPlan) {
-    return (
-      <PricingUnavailable reason='Stripe products "Base" or "Plus" not found' />
-    );
-  }
-
-  // Explicitly select MONTHLY recurring prices
-  const basePrice = prices.find(
-    (price) =>
-      price.productId === basePlan.id &&
-      price.interval === 'month'
-  );
-
-  const plusPrice = prices.find(
-    (price) =>
-      price.productId === plusPlan.id &&
-      price.interval === 'month'
-  );
-
-  if (!basePrice || !plusPrice) {
-    return (
-      <PricingUnavailable reason="Stripe prices not found for Base or Plus plans" />
-    );
-  }
-
+export default function PricingPage() {
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto">
-        <PricingCard
-          name={basePlan.name}
-          price={basePrice.unitAmount}
-          interval={basePrice.interval}
-          trialDays={basePrice.trialPeriodDays}
-          features={[
-            'Unlimited Usage',
-            'Unlimited Workspace Members',
-            'Email Support',
-          ]}
-          priceId={basePrice.id}
-        />
-
-        <PricingCard
-          name={plusPlan.name}
-          price={plusPrice.unitAmount}
-          interval={plusPrice.interval}
-          trialDays={plusPrice.trialPeriodDays}
-          features={[
-            'Everything in Base, and:',
-            'Early Access to New Features',
-            '24/7 Support + Slack Access',
-          ]}
-          priceId={plusPrice.id}
-        />
-      </div>
-    </main>
-  );
-}
-
-function PricingUnavailable({ reason }: { reason: string }) {
-  return (
-    <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-      <h1 className="text-3xl font-semibold text-gray-900">Pricing unavailable</h1>
-      <p className="mt-4 text-gray-700">
-        We couldn&apos;t load pricing right now. Please try again later or contact support.
+    <div className="max-w-3xl mx-auto py-8">
+      <h2 className="text-3xl font-bold mb-4">Tasklyst Plans</h2>
+      <p className="text-muted-foreground mb-8">
+        Pick a plan that fits your team’s needs. Whether you’re just getting started or scaling your operations, Tasklyst is flexible for any workflow.
       </p>
-      <p className="mt-4 text-sm text-gray-500">{reason}</p>
-    </main>
-  );
-}
-
-function PricingCard({
-  name,
-  price,
-  interval,
-  trialDays,
-  features,
-  priceId,
-}: {
-  name: string;
-  price: number;
-  interval: string;
-  trialDays: number;
-  features: string[];
-  priceId: string;
-}) {
-  return (
-    <div className="pt-6">
-      <h2 className="text-2xl font-medium text-gray-900 mb-2">{name}</h2>
-
-      <p className="text-sm text-gray-600 mb-4">
-        with {trialDays} day free trial
-      </p>
-
-      <p className="text-4xl font-medium text-gray-900 mb-6">
-        ${price / 100}{' '}
-        <span className="text-xl font-normal text-gray-600">
-          per user / {interval}
-        </span>
-      </p>
-
-      <ul className="space-y-4 mb-8">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-start">
-            <Check className="h-5 w-5 text-orange-500 mr-2 mt-0.5 flex-shrink-0" />
-            <span className="text-gray-700">{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      <form action={checkoutAction}>
-        <input type="hidden" name="priceId" value={priceId} />
-        <SubmitButton />
-      </form>
+      {/* Pricing cards/components go here */}
     </div>
   );
 }
