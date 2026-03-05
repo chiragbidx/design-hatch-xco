@@ -30,13 +30,10 @@ export type NewTask = typeof tasks.$inferInsert;
 
 // --- Export all existing tables and types below ---
 // Example (add your other exports here):
-// export { users, teams, ... }
+// export { users, teams, teamMembers, activityLogs, ActivityType, ... }
 // export type { User, Team, ... }
 
-export * from "./other-existing-entities"; // if such file(s) exist
-
 // Explicit export for all statically known entities
-// e.g. export { users, teams, teamMembers, activityLogs, ActivityType, ... }
 export {
   tasks, // NEWLY ADDED
   // ...existing table exports (users, teams, teamMembers, activityLogs, etc.)
