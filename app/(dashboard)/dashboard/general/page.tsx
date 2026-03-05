@@ -1,121 +1,44 @@
-'use client';
+import React from "react";
+import { Card } from "@/components/ui/card";
 
-import { useActionState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
-import { updateAccount } from '@/app/(login)/actions';
-import { User } from '@/lib/db/schema';
-import useSWR from 'swr';
-import { Suspense } from 'react';
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-type ActionState = {
-  name?: string;
-  error?: string;
-  success?: string;
+export const metadata = {
+  title: "Team Settings – Tasklyst",
+  description: "Manage your team’s details, contact support, and update your Tasklyst workspace information.",
 };
 
-type AccountFormProps = {
-  state: ActionState;
-  nameValue?: string;
-  emailValue?: string;
-};
-
-function AccountForm({
-  state,
-  nameValue = '',
-  emailValue = ''
-}: AccountFormProps) {
+export default function TeamSettingsPage() {
   return (
-    <>
-      <div>
-        <Label htmlFor="name" className="mb-2">
-          Name
-        </Label>
-        <Input
-          id="name"
-          name="name"
-          placeholder="Enter your name"
-          defaultValue={state.name || nameValue}
-          required
-        />
-      </div>
-      <div>
-        <Label htmlFor="email" className="mb-2">
-          Email
-        </Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Enter your email"
-          defaultValue={emailValue}
-          required
-        />
-      </div>
-    </>
-  );
-}
-
-function AccountFormWithData({ state }: { state: ActionState }) {
-  const { data: user } = useSWR<User>('/api/user', fetcher);
-  return (
-    <AccountForm
-      state={state}
-      nameValue={user?.name ?? ''}
-      emailValue={user?.email ?? ''}
-    />
-  );
-}
-
-export default function GeneralPage() {
-  const [state, formAction, isPending] = useActionState<ActionState, FormData>(
-    updateAccount,
-    {}
-  );
-
-  return (
-    <section className="flex-1 p-4 lg:p-8">
-      <h1 className="text-lg lg:text-2xl font-medium text-gray-900 mb-6">
-        General Settings
-      </h1>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Information</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4" action={formAction}>
-            <Suspense fallback={<AccountForm state={state} />}>
-              <AccountFormWithData state={state} />
-            </Suspense>
-            {state.error && (
-              <p className="text-red-500 text-sm">{state.error}</p>
-            )}
-            {state.success && (
-              <p className="text-green-500 text-sm">{state.success}</p>
-            )}
-            <Button
-              type="submit"
-              className="bg-orange-500 hover:bg-orange-600 text-white"
-              disabled={isPending}
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                'Save Changes'
-              )}
-            </Button>
-          </form>
-        </CardContent>
+    <div className="max-w-2xl mx-auto py-8">
+      <h2 className="text-2xl font-bold mb-4">Team Settings</h2>
+      <Card className="mb-6">
+        <div className="p-6 space-y-2">
+          <div>
+            <span className="block text-muted-foreground mb-1">Workspace:</span>
+            <span className="font-medium">Tasklyst</span>
+          </div>
+          <div>
+            <span className="block text-muted-foreground mb-1">Owner:</span>
+            <span className="font-medium">Chirag Dodiya</span>
+          </div>
+          <div>
+            <span className="block text-muted-foreground mb-1">Contact Email:</span>
+            <a className="font-medium text-primary underline" href="mailto:hi@chirag.co">
+              hi@chirag.co
+            </a>
+          </div>
+        </div>
       </Card>
-    </section>
+      <Card>
+        <div className="p-6">
+          <h3 className="text-lg font-semibold mb-1">Need help?</h3>
+          <p className="text-muted-foreground mb-4">
+            For support, questions, or feedback about Tasklyst, email us any time.
+          </p>
+          <a className="inline-block bg-primary text-white px-4 py-2 rounded transition hover:brightness-110" href="mailto:hi@chirag.co">
+            Contact Support
+          </a>
+        </div>
+      </Card>
+    </div>
   );
 }
