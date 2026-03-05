@@ -11,6 +11,8 @@ import {
 
 // ...existing tables...
 
+// Task table
+
 export const tasks = pgTable("tasks", {
   id: serial("id").primaryKey().notNull(),
   title: text("title").notNull(),
@@ -22,32 +24,27 @@ export const tasks = pgTable("tasks", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
-// Relations (if applicable):
-// - tasks.userId references users.id
-// - tasks.teamId references teams.id
-
-// Add foreign keys if you maintain them in drizzle schema
-// (example, adjust as needed):
-
-// export const tasks = pgTable("tasks", {
-//   ...
-//   userId: integer("user_id").notNull().references(() => users.id),
-//   teamId: integer("team_id").references(() => teams.id),
-//   ...
-// }, (table) => ({
-//   fk_user: foreignKey(() => ({
-//     columns: [table.userId],
-//     foreignColumns: [users.id],
-//   })),
-//   fk_team: foreignKey(() => ({
-//     columns: [table.teamId],
-//     foreignColumns: [teams.id],
-//   })),
-// }));
-
 // Types
-
 export type Task = typeof tasks.$inferSelect;
 export type NewTask = typeof tasks.$inferInsert;
 
-// ...keep other table/type exports intact
+// --- Export all existing tables and types below ---
+// Example (add your other exports here):
+// export { users, teams, ... }
+// export type { User, Team, ... }
+
+export * from "./other-existing-entities"; // if such file(s) exist
+
+// Explicit export for all statically known entities
+// e.g. export { users, teams, teamMembers, activityLogs, ActivityType, ... }
+export {
+  tasks, // NEWLY ADDED
+  // ...existing table exports (users, teams, teamMembers, activityLogs, etc.)
+};
+
+// Optionally, if you export types statically as well:
+export type {
+  Task, // NEWLY ADDED
+  NewTask, // NEWLY ADDED
+  // ...existing type exports (User, Team, etc.)
+};
